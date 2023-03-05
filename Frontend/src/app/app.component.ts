@@ -8,7 +8,43 @@ export interface Todo {
   description: string;
   isCompleted: boolean;
 }
-
+/**
+ * For real word app,
+ * 1. I will choose using NgRx,with a single store for managing the state of your application, making it easier to manage and maintain.
+ * Also, Ngrx come with predictable data flow and immutable state, also NgRx scales well with larger applications, making it easy to manage complex state and to keep your application maintainable as it grows.
+ *
+ * 2. Restructure the folder to be clearer and break app-component into more single-functional components.
+ * app/
+ * ├── core/
+ * │   ├── models/
+ * │   │   └── todo.ts
+ * │   └── services/
+ * │       └── todo.service.ts
+ * ├── shared/
+ * │   ├── components/
+ * │   │   ├── footer/
+ * │   │   │   └── footer.component.ts
+ * │   │   ├── header/
+ * │   │   │   └── header.component.ts
+ * │   │   ├── todo-form/
+ * │   │   │   └── todo-form.component.ts
+ * │   │   └── todo-list/
+ * │   │       ├── todo-item/
+ * │   │       │   └── todo-item.component.ts
+ * │   │       └── todo-list.component.ts
+ * │   └── directives/
+ * │       └── highlight.directive.ts
+ * ├── features/
+ * │   ├── todo/
+ * │   │   ├── pages/
+ * │   │   │   ├── todo-page/
+ * │   │   │   │   ├── todo-page.component.html
+ * │   │   │   │   ├── todo-page.component.scss
+ * │   │   │   │   ├── todo-page.component.spec.ts
+ * │   │   │   │   ├── todo-page.component.ts
+ * │   │   │   │   └── todo-page.module.ts
+ * │   │   │   └── index.ts
+ * */
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
