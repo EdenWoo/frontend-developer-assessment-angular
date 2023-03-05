@@ -6,7 +6,7 @@ export const todoItemRouter = express.Router();
 
 let todoItems: TodoItems = {};
 
-const findAll = async (): Promise<TodoItem[]> => Object.values(todoItems);
+const findAll = async (): Promise<TodoItem[]> => Object.values(todoItems).filter(todoItem => !todoItem.isCompleted);
 const find = async (id: string): Promise<TodoItem> => todoItems[id];
 
 const todoItemDescriptionExists = async (
@@ -131,4 +131,22 @@ todoItemRouter.delete("/:id", async (req: Request, res: Response) => {
   } catch (e) {
     return res.status(500).send(e.message);
   }
+});
+
+
+// todoItems/:id/markAsDone
+todoItemRouter.post('/:id/markAsDone', async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id;
+        const existingTodoItem: TodoItem = await find(id);
+        if (existingTodoItem) {
+            existingTodoItem.isCompleted = true;
+            const updatedItem = await update(id, existingTodoItem);
+            return res.status(200).json(updatedItem);
+        }
+
+        return res.status(404).send('TodoItem not found');
+    } catch (e) {
+        return res.status(500).send(e.message);
+    }
 });

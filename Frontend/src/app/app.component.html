@@ -9,7 +9,7 @@
       <div role="alert" class="fade alert alert-success show">
         <div class="alert-heading h4">Todo List App (Angular)</div>
         Welcome to the ClearPoint frontend technical test. We like to keep things simple, yet clean so your task(s) are as follows:<br><br>
-        
+
         <ol class="list-left text-left">
           <li>Add the ability to add and delete a Todo Item by calling the backend API</li>
           <li>Add form validation to the description as to disallow entries that contain any of these words: cat, dog, yes, no and display an error message below the form field</li>
@@ -23,27 +23,72 @@
   </div>
   <div class="row">
     <div class="col">
-    <div class="container">
-      <h1>Add Item</h1>
-      <div class="mb-3 row">
-        <label for="formAddTodoItem" class="form-label col-form-label col-sm-2">Description</label>
-        <div class="col-md-6">
-          <input placeholder="Enter description..." type="text" id="formAddTodoItem" class="form-control" value="">
+      <form [formGroup]="todoForm" (ngSubmit)="addTodo()">
+        <div class="container">
+          <h1>Add Item</h1>
+          <div class="mb-3 row">
+            <label for="formAddTodoItem" class="form-label col-form-label col-sm-2">Description</label>
+            <div class="col-md-6">
+              <input placeholder="Enter description..."
+                     type="text"
+                     id="formAddTodoItem"
+                     class="form-control"
+                     value=""
+                     formControlName="description"
+                     required>
+              <div *ngIf="description.invalid && (description.dirty || description.touched)">
+                <div class="error" *ngIf="description.errors && description.errors['required']">
+                  Description is required.
+                </div>
+                <div class="error" *ngIf="description.errors && description.errors['forbiddenWords']">
+                  Description contains forbidden words.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3 offset-md-2 row">
+            <div class="hstack gap-2">
+              <button type="submit" [disabled]="todoForm.invalid" class="btn btn-primary add-item">Add
+                Item
+              </button>
+              <button type="button" [disabled]="!description.value" class="btn btn-secondary"
+                      (click)="resetTodoForm()">Clear
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <ng-container *ngIf="todos$ | async as todos">
+      <div class="row">
+        <div class="col">
+          <h1>Showing {{todos.length}} Item(s)
+            <button type="button" class="pull-right btn btn-primary" (click)="getTodos()">Refresh</button>
+          </h1>
+          <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+              <th>Id</th>
+              <th>Description</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr class="todo" *ngFor="let todo of todos | sortList: 'description'">
+              <td class="id">{{todo.id}}</td>
+              <td class="description">{{todo.description}}</td>
+              <td>
+                <button type="button" class="btn btn-primary"
+                        (click)="markTodoAsDone(todo)">Mark as completed
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="mb-3 offset-md-2 row">
-        <div class="hstack gap-2">
-          <button type="button" class="btn btn-primary">Add Item</button>
-          <button type="button" class="btn btn-secondary">Clear</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <h1>Showing 0 Item(s) <button type="button" class="pull-right btn btn-primary">Refresh</button></h1>
-      <table class="table table-striped table-bordered table-hover"><thead><tr><th>Id</th><th>Description</th><th>Action</th></tr></thead><tbody></tbody></table>
-    </div>
+    </ng-container>
   </div>
 </div>
 
